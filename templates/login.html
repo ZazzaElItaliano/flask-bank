@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Rabobank - Login</title>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-teal-900 min-h-screen flex items-center justify-center">
+
+    <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl shadow-2xl border border-white/20 w-96 text-white">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold tracking-tight">RABOBANK</h1>
+            <p class="text-teal-300 text-sm mt-2">Área de Clientes</p>
+        </div>
+
+        <form action="/auth_login" method="POST" class="space-y-6">
+            <div>
+                <label class="block text-xs uppercase font-bold text-teal-400 mb-1">DNI del Usuario</label>
+                <input type="text" name="dni" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+            </div>
+
+            <div>
+                <label class="block text-xs uppercase font-bold text-teal-400 mb-1">Contraseña</label>
+                <input type="password" name="contrasena" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-500 transition">
+            </div>
+
+            <button type="submit" class="w-full bg-teal-500 hover:bg-teal-400 text-gray-900 font-bold py-3 rounded-xl transition duration-300 transform hover:scale-105 shadow-xl">
+                Acceder al Portal
+            </button>
+        </form>
+
+        <div class="mt-8 text-center text-sm">
+            <p class="text-gray-400">¿Eres nuevo aquí? <a href="/registro" class="text-white font-bold hover:text-teal-300 transition">Regístrate</a></p>
+        </div>
+    </div>
+
+</body>
+</html>

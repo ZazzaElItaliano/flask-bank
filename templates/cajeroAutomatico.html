@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Rabobank - Cajero</title>
+</head>
+<body class="bg-slate-50 min-h-screen">
+
+    <nav class="bg-slate-900 text-white p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold tracking-tighter text-teal-400">RABOBANK</h1>
+            <a href="{{ url_for('dashboard') }}" class="text-sm font-bold hover:text-teal-400 transition">Volver al Panel</a>
+        </div>
+    </nav>
+
+    <div class="container mx-auto mt-12 p-4 max-w-4xl">
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-200">
+            <div class="bg-gradient-to-r from-teal-600 to-teal-800 p-8 text-white text-center">
+                <h2 class="text-lg uppercase tracking-widest font-bold opacity-80">Saldo Disponible</h2>
+                <p class="text-5xl font-black mt-2">{{ "%.2f"|format(cuenta.saldo) }}€</p>
+            </div>
+
+            <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <button onclick="document.getElementById('modalIngreso').classList.remove('hidden')" 
+                    class="flex items-center justify-between p-6 bg-teal-50 border-2 border-teal-100 rounded-2xl hover:border-teal-500 transition group">
+                    <div class="text-left">
+                        <span class="block text-teal-800 font-bold text-xl">Ingresar</span>
+                        <span class="text-teal-600 text-sm">Añade fondos a tu cuenta</span>
+                    </div>
+                    <i class='bx bx-plus-circle text-4xl text-teal-500 group-hover:scale-110 transition'></i>
+                </button>
+
+                <button onclick="document.getElementById('modalRetiro').classList.remove('hidden')"
+                    class="flex items-center justify-between p-6 bg-red-50 border-2 border-red-100 rounded-2xl hover:border-red-500 transition group">
+                    <div class="text-left">
+                        <span class="block text-red-800 font-bold text-xl">Retirar</span>
+                        <span class="text-red-600 text-sm">Sacar efectivo</span>
+                    </div>
+                    <i class='bx bx-minus-circle text-4xl text-red-500 group-hover:scale-110 transition'></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalIngreso" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6">Ingresar Dinero</h3>
+            <form action="{{ url_for('ingresar') }}" method="POST" class="space-y-4">
+                <input type="text" name="asunto" placeholder="Concepto (ej. Ingreso efectivo)" required class="w-full p-4 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                <input type="number" name="cantidad" step="0.01" placeholder="Cantidad €" required class="w-full p-4 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="this.closest('#modalIngreso').classList.add('hidden')" class="flex-1 py-4 font-bold text-slate-500">Cancelar</button>
+                    <button type="submit" class="flex-1 py-4 bg-teal-600 text-white rounded-xl font-bold hover:bg-teal-700 transition">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="modalRetiro" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
+            <h3 class="text-2xl font-bold text-slate-800 mb-6">Retirar Dinero</h3>
+            <form action="{{ url_for('retirar') }}" method="POST" class="space-y-4">
+                <input type="text" name="asuntoRetiro" placeholder="Concepto (ej. Cajero centro)" required class="w-full p-4 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-red-500">
+                <input type="number" name="cantidadRetiro" step="0.01" placeholder="Cantidad €" required class="w-full p-4 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-red-500">
+                <div class="flex space-x-3">
+                    <button type="button" onclick="this.closest('#modalRetiro').classList.add('hidden')" class="flex-1 py-4 font-bold text-slate-500">Cancelar</button>
+                    <button type="submit" class="flex-1 py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Retirar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

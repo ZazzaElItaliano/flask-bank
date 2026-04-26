@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Rabobank - Registro</title>
+</head>
+<body class="bg-gradient-to-r from-slate-900 to-slate-800 min-h-screen flex items-center justify-center p-6">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden">
+        <div class="flex flex-col md:flex-row">
+            <div class="md:w-1/3 bg-teal-500 p-8 text-white flex flex-col justify-center items-center text-center">
+                <i class='bx bxs-bank text-6xl mb-4'></i>
+                <h2 class="text-3xl font-bold">Únete a Rabobank</h2>
+                <p class="mt-4 text-teal-100">Crea tu cuenta en minutos y gestiona tus finanzas de forma inteligente.</p>
+            </div>
+
+            <div class="md:w-2/3 p-8">
+                <h3 class="text-2xl font-semibold text-gray-800 mb-6">Datos del Cliente</h3>
+                
+                <form action="/auth_registro" method="POST" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                            <input type="text" name="nombre" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Apellidos</label>
+                            <input type="text" name="apellido" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">DNI</label>
+                            <input type="text" name="dni" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <input type="email" name="email" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Teléfono</label>
+                            <input type="text" name="telefono" class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Contraseña</label>
+                            <input type="password" name="contrasena" required class="w-full mt-1 p-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="md:col-span-2">
+                            <label class="block text-sm font-medium text-gray-700">Dirección</label>
+                            <input type="text" name="direccion" class="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">País</label>
+                            <input type="text" name="pais" required class="w-full mt-1 p-2 border border-gray-300 rounded-md outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-2 mt-4">
+                        <input type="checkbox" required class="h-4 w-4 text-teal-600 rounded">
+                        <span class="text-sm text-gray-600">Acepto los términos y condiciones.</span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-teal-600 text-white py-3 rounded-lg font-bold hover:bg-teal-700 transition duration-300 shadow-lg">
+                        Registrarme Ahora
+                    </button>
+                </form>
+
+                <p class="mt-6 text-center text-sm text-gray-500">
+                    ¿Ya tienes cuenta? <a href="/" class="text-teal-600 font-bold hover:underline">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
