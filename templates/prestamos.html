@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Rabobank - Préstamos</title>
+</head>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-3xl font-bold text-slate-800 tracking-tighter">GESTIÓN DE PRÉSTAMOS</h2>
+            <a href="{{ url_for('dashboard') }}" class="text-slate-500 font-bold hover:text-teal-600 transition">Volver al Panel</a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 h-fit">
+                <h3 class="text-xl font-bold mb-6 text-teal-600">Solicitar Nuevo</h3>
+                <form action="{{ url_for('solicitar_prestamo') }}" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Concepto</label>
+                        <input type="text" name="concepto" placeholder="Ej. Coche nuevo" required class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Cantidad (€)</label>
+                        <input type="number" name="cantidad" step="0.01" placeholder="0.00" required class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 uppercase mb-1">Plazo (Meses)</label>
+                        <select name="plazo_meses" class="w-full p-3 bg-slate-50 border rounded-xl outline-none focus:ring-2 focus:ring-teal-500">
+                            <option value="12">12 meses (1 año)</option>
+                            <option value="24">24 meses (2 años)</option>
+                            <option value="48">48 meses (4 años)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-teal-600 transition shadow-lg shadow-slate-200">
+                        Enviar Solicitud
+                    </button>
+                </form>
+            </div>
+
+            <div class="lg:col-span-2 space-y-4">
+                <h3 class="text-xl font-bold text-slate-800">Mis Préstamos</h3>
+                {% for p in prestamos %}
+                <div class="bg-white border border-slate-200 p-6 rounded-3xl flex justify-between items-center hover:shadow-md transition">
+                    <div>
+                        <div class="flex items-center space-x-3 mb-1">
+                            <span class="text-lg font-bold text-slate-800">{{ p.concepto }}</span>
+                            <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase {{ 'bg-amber-100 text-amber-600' if p.estado == 'Estudio' else 'bg-teal-100 text-teal-600' }}">
+                                {{ p.estado }}
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-400">Cuota mensual: <span class="text-slate-600 font-bold">{{ "%.2f"|format(p.mensualidad) }}€</span></p>
+                        <p class="text-[10px] text-slate-400 mt-2 italic">Vence el: {{ p.plazo }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-slate-400 uppercase font-bold tracking-widest">Total a pagar</p>
+                        <p class="text-2xl font-black text-slate-900">{{ "%.2f"|format(p.cantidad_pagar) }}€</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-slate-100 border-2 border-dashed border-slate-200 p-12 rounded-3xl text-center text-slate-400">
+                    No tienes préstamos activos ni solicitudes pendientes.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

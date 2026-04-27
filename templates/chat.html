@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Rabobank - Soporte</title>
+</head>
+<body class="bg-slate-100 h-screen flex flex-col">
+
+    <nav class="bg-slate-900 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="{{ url_for('dashboard') }}" class="text-teal-400 hover:text-white transition">
+                    <i class='bx bx-arrow-back text-2xl'></i>
+                </a>
+                <h1 class="text-xl font-bold italic">SOPORTE RABOBANK</h1>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 overflow-y-auto p-4 space-y-4">
+        <div class="max-w-3xl mx-auto flex flex-col space-y-4">
+            {% for msj in mensajes %}
+            <div class="flex justify-end">
+                <div class="bg-white p-4 rounded-2xl rounded-tr-none shadow-sm border border-slate-200 max-w-[85%]">
+                    <div class="flex items-center space-x-2 mb-1">
+                        <span class="text-[10px] font-black text-teal-600 uppercase">ASUNTO: {{ msj.asunto }}</span>
+                    </div>
+                    <p class="text-slate-700 text-sm">{{ msj.mensaje }}</p>
+                    <span class="text-[9px] text-slate-400 mt-2 block text-right">Para: {{ msj.nombre_destinatario }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-center p-10 text-slate-400 italic">No has enviado ninguna consulta todavía.</div>
+            {% endfor %}
+        </div>
+    </main>
+
+    <footer class="bg-white p-6 border-t border-slate-200 shadow-2xl">
+        <div class="max-w-3xl mx-auto">
+            <form action="{{ url_for('enviar_mensaje') }}" method="POST" class="space-y-3">
+                <input type="text" name="asunto" placeholder="¿Cuál es el motivo? (asunto)" maxlength="20" required 
+                    class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-teal-500 outline-none">
+                
+                <div class="flex space-x-3">
+                    <input type="text" name="mensaje" placeholder="Describe tu problema..." maxlength="120" required 
+                        class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-teal-500 outline-none">
+                    <button type="submit" class="bg-teal-600 text-white px-6 rounded-xl font-bold hover:bg-teal-700 transition">
+                        <i class='bx bxs-send text-xl'></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </footer>
+
+    <script>
+        const main = document.querySelector('main');
+        main.scrollTop = main.scrollHeight;
+    </script>
+</body>
+</html>

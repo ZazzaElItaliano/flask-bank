@@ -37,6 +37,19 @@ class Cuenta(db.Model):
     dni = db.Column(db.String(15), db.ForeignKey('usuario.dni'))
 
 
+class Prestamo(db.Model):
+    __tablename__ = 'prestamos'
+    id_prestamo = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    estado = db.Column(db.String(20), default='Pendiente')
+    concepto = db.Column(db.String(50))
+    cantidad = db.Column(db.Float)
+    cantidad_pagar = db.Column(db.Float)
+    interes = db.Column(db.Float)
+    mensualidad = db.Column(db.Float)
+    plazo = db.Column(db.Date)
+    fecha_creacion = db.Column(db.Date, default=datetime.now().date)
+    id_cuenta = db.Column(db.Integer, db.ForeignKey('cuenta.id_cuenta'))
+
 class Movimiento(db.Model):
     __tablename__ = 'movimiento'
     id_movimiento = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -45,6 +58,15 @@ class Movimiento(db.Model):
     fecha = db.Column(db.Date, default=datetime.now().date)
     hora = db.Column(db.Time, default=datetime.now().time)
     id_cuenta = db.Column(db.Integer, db.ForeignKey('cuenta.id_cuenta'))
+    
+    
+class Chat(db.Model):
+    __tablename__ = 'chat'
+    id_chat = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    asunto = db.Column(db.String(20))
+    mensaje = db.Column(db.String(120))
+    nombre_destinatario = db.Column(db.String(20))
+    dni = db.Column(db.String(15), db.ForeignKey('usuario.dni'))
     
     
 # --- FUNCIONES DE APOYO ---
@@ -206,6 +228,78 @@ def movimientos():
     lista_movs = Movimiento.query.filter_by(id_cuenta=cuenta.id_cuenta).order_by(Movimiento.fecha.desc(), Movimiento.hora.desc()).all()
     
     return render_template('mostrarMov.html', movimientos=lista_movs)
+
+
+@app.route('/chat')
+def chat_page():
+    if 'dni' not in session:
+        return redirect(url_for('login_page'))
+    
+    # Obtenemos los mensajes enviados por este usuario
+    mensajes = Chat.query.filter_by(dni=session['dni']).all()
+    return render_template('chat.html', mensajes=mensajes)
+
+@app.route('/enviar_mensaje', methods=['POST'])
+def enviar_mensaje():
+    if 'dni' not in session:
+        return redirect(url_for('login_page'))
+    
+    nuevo_msj = Chat(
+        asunto=request.form.get('asunto') or "Soporte", # Valor por defecto si no hay asunto
+        mensaje=request.form.get('mensaje'),
+        nombre_destinatario="Admin", # Como no hay admin, lo marcamos así
+        dni=session['dni']
+    )
+    
+    db.session.add(nuevo_msj)
+    db.session.commit()
+    return redirect(url_for('chat_page'))
+
+@app.route('/prestamos')
+def prestamos_page():
+    if 'dni' not in session:
+        return redirect(url_for('login_page'))
+    
+    cuenta = Cuenta.query.filter_by(dni=session['dni']).first()
+    mis_prestamos = Prestamo.query.filter_by(id_cuenta=cuenta.id_cuenta).all()
+    return render_template('prestamos.html', cuenta=cuenta, prestamos=mis_prestamos)
+
+@app.route('/solicitar_prestamo', methods=['POST'])
+def solicitar_prestamo():
+    if 'dni' not in session:
+        return redirect(url_for('login_page'))
+    
+    cuenta = Cuenta.query.filter_by(dni=session['dni']).first()
+    
+    cantidad = float(request.form.get('cantidad'))
+    concepto = request.form.get('concepto')
+    meses = int(request.form.get('plazo_meses')) # Recibimos meses para calcular
+    
+    # Lógica de ejemplo: 5% de interés fijo
+    interes_valor = 5.0 
+    total_a_pagar = cantidad * (1 + (interes_valor / 100))
+    cuota_mensual = total_a_pagar / meses
+    
+    # Calcular fecha de fin (plazo) aproximada
+    from datetime import timedelta
+    fecha_plazo = datetime.now() + timedelta(days=meses*30)
+
+    nuevo_prestamo = Prestamo(
+        estado='Estudio',
+        concepto=concepto,
+        cantidad=cantidad,
+        cantidad_pagar=total_a_pagar,
+        interes=interes_valor,
+        mensualidad=cuota_mensual,
+        plazo=fecha_plazo.date(),
+        id_cuenta=cuenta.id_cuenta
+    )
+    
+    db.session.add(nuevo_prestamo)
+    db.session.commit()
+    
+    flash("Solicitud de préstamo enviada correctamente. En revisión.", "success")
+    return redirect(url_for('prestamos_page'))
 
 if __name__ == '__main__':
     app.run(debug=True)
