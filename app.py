@@ -301,5 +301,41 @@ def solicitar_prestamo():
     flash("Solicitud de préstamo enviada correctamente. En revisión.", "success")
     return redirect(url_for('prestamos_page'))
 
+
+@app.route('/eliminar_perfil', methods=['POST'])
+def eliminar_perfil():
+    if 'dni' not in session:
+        return redirect(url_for('login_page'))
+    
+    dni_usuario = session['dni']
+    usuario = Usuario.query.get(dni_usuario)
+    
+    if usuario:
+        try:
+            # 1. Obtenemos la cuenta para borrar sus dependencias
+            cuenta = Cuenta.query.filter_by(dni=dni_usuario).first()
+            if cuenta:
+                # Borramos movimientos y préstamos asociados a la cuenta
+                Movimiento.query.filter_by(id_cuenta=cuenta.id_cuenta).delete()
+                Prestamo.query.filter_by(id_cuenta=cuenta.id_cuenta).delete()
+                db.session.delete(cuenta)
+            
+            # 2. Borramos mensajes del chat
+            Chat.query.filter_by(dni=dni_usuario).delete()
+            
+            # 3. Borramos al usuario
+            db.session.delete(usuario)
+            
+            # 4. Confirmamos cambios y limpiamos sesión
+            db.session.commit()
+            session.clear()
+            flash("Tu cuenta y todos tus datos han sido eliminados correctamente.", "info")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"Error al eliminar el perfil: {str(e)}", "danger")
+            return redirect(url_for('dashboard'))
+            
+    return redirect(url_for('login_page'))
+
 if __name__ == '__main__':
     app.run(debug=True)

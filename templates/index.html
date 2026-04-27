@@ -92,6 +92,16 @@
     </div>
     <span class="text-slate-700 font-semibold">Préstamos</span>
     </a>
+    <form action="{{ url_for('eliminar_perfil') }}" method="POST" 
+      onsubmit="return confirm('¿Estás COMPLETAMENTE seguro? Esta acción borrará tu cuenta, saldo, movimientos y préstamos de forma permanente.');"
+      class="flex flex-col">
+    <button type="submit" class="w-full flex flex-col items-center justify-center p-6 bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-red-600 hover:bg-red-50 transition group">
+        <div class="w-12 h-12 bg-red-100 text-red-600 rounded-full flex items-center justify-center text-2xl mb-3 group-hover:bg-red-600 group-hover:text-white transition">
+            <i class='bx bx-user-x'></i>
+        </div>
+        <span class="text-slate-700 font-semibold italic">Eliminar Perfil</span>
+    </button>
+</form>
   
 </div>
 
@@ -126,9 +136,12 @@
             </tbody>
         </table>
     </div>
+    
 </div>
             </div>
         </div>
+
+    
     </main>
 
 </body>
